@@ -92,7 +92,7 @@ class sessions
             get_string('studentscanmark', 'attendance'),
             get_string('passwordgrp', 'attendance'),
             get_string('randompassword', 'attendance'),
-            get_string('requiresubnet', 'attendance')
+            get_string('subnet', 'attendance')
         );
     }
 
@@ -128,7 +128,7 @@ class sessions
                 'studentscanmark' => $data->header9,
                 'passwordgrp' => $data->header10,
                 'randompassword' => $data->header11,
-                'requiresubnet' => $data->header12
+                'subnet' => $data->header12
             );
         } else {
             return array(
@@ -144,7 +144,7 @@ class sessions
                 'studentscanmark' => 9,
                 'passwordgrp' => 10,
                 'randompassword' => 11,
-                'requiresubnet' => 12
+                'subnet' => 12
             );
         }
     }
@@ -261,7 +261,14 @@ class sessions
             $session->studentscanmark = $this->get_column_data($row, $mapping['studentscanmark']);
             $session->passwordgrp = $this->get_column_data($row, $mapping['passwordgrp']);
             $session->randompassword = $this->get_column_data($row, $mapping['randompassword']);
-            $session->requiresubnet = $this->get_column_data($row, $mapping['requiresubnet']);
+
+            // Set session subnet restriction. Use the default activity level subnet if there isn't one set for this session.
+            $session->subnet = $this->get_column_data($row, $mapping['subnet']);
+            if (empty($session->subnet)) {
+                $session->usedefaultsubnet = '1';
+            } else {
+                $session->usedefaultsubnet = '';
+            }
 
             $session->statusset = 0;
 
