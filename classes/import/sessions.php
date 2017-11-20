@@ -81,7 +81,7 @@ class sessions
     {
         return array(
             get_string('course', 'attendance'),
-            get_string('sessiontype', 'attendance'),
+            get_string('groups', 'attendance'),
             get_string('sessiondate', 'attendance'),
             get_string('from', 'attendance'),
             get_string('to', 'attendance'),
@@ -117,7 +117,7 @@ class sessions
         if ($data) {
             return array(
                 'course' => $data->header0,
-                'sessiontype' => $data->header1,
+                'groups' => $data->header1,
                 'sessiondate' => $data->header2,
                 'from' => $data->header3,
                 'to' => $data->header4,
@@ -133,7 +133,7 @@ class sessions
         } else {
             return array(
                 'course' => 0,
-                'sessiontype' => 1,
+                'groups' => 1,
                 'sessiondate' => 2,
                 'from' => 3,
                 'to' => 4,
@@ -227,11 +227,21 @@ class sessions
 
             $session = new stdClass();
             $session->course = $this->get_column_data($row, $mapping['course']);
-            $session->sessiontype = $this->get_column_data($row, $mapping['sessiontype']);
 
+            // Handle multiple group assignments per session. Expect semicolon separated group names.
+            $groups = $this->get_column_data($row, $mapping['groups']);
+            if (! empty($groups)) {
+                $session->groups = explode(';', $groups);
+                $session->sessiontype = \mod_attendance_structure::SESSION_GROUP;
+            } else {
+                $session->sessiontype = \mod_attendance_structure::SESSION_COMMON;
+            }
+
+            // Expect standardised date format, eg YYYY-MM-DD.
             $sessiondate = strtotime($this->get_column_data($row, $mapping['sessiondate']));
             $session->sessiondate = $sessiondate;
 
+            // Expect standardised time format, eg HH:MM.
             $from = explode(':', $this->get_column_data($row, $mapping['from']));
             $session->sestime['starthour'] = $from[0];
             $session->sestime['startminute'] = $from[1];
@@ -310,6 +320,19 @@ class sessions
                 if ($DB->record_exists('attendance', array(
                     'course' => $course->id
                 ))) {
+                    // Translate group names to group IDs. They are unique per course.
+                    if ($session->sessiontype === \mod_attendance_structure::SESSION_GROUP) {
+                        foreach ($session->groups as $groupname) {
+                            $gid = groups_get_group_by_name($course->id, $groupname);
+                            if ($gid === false) {
+                                \mod_attendance_notifyqueue::notify_problem(get_string('sessionunknowngroup', 'attendance', $groupname));
+                            } else {
+                                $groupids[] = $gid;
+                            }
+                        }
+                        $session->groups = $groupids;
+                    }
+
                     // Get activities in course.
                     $activities = $DB->get_recordset('attendance', array(
                         'course' => $course->id
