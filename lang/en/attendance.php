@@ -444,6 +444,7 @@ $string['studentscanmarksessiontime_desc'] = 'If checked students can only recor
 $string['studentscanmarksessiontimeend'] = 'Session end (minutes)';
 $string['studentscanmarksessiontimeend_desc'] = 'If the session does not have an end time, how many minutes should the session be available for students to record their attendance.';
 $string['submitattendance'] = 'Submit attendance';
+$string['subnet'] = 'Subnet';
 $string['subnetactivitylevel'] = 'Allow subnet config at activity level';
 $string['subnetactivitylevel_desc'] = 'If enabled, teachers can override the default subnet at the activity level when creating an attendance. Otherwise the site default will be used when creating a session.';
 $string['subnetwrong'] = 'Attendance can only be recorded from certain locations, and this computer is not on the allowed list.';
