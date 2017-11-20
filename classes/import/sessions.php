@@ -307,6 +307,9 @@ class sessions
     {
         global $DB;
 
+        // Count of sessions added.
+        $okcount = 0;
+
         foreach ($this->sessions as $session) {
             // Check course shortname matches.
             if ($DB->record_exists('course', array(
@@ -344,14 +347,21 @@ class sessions
                         $att = new mod_attendance_structure($activity, $cm, $course);
 
                         $sessions = attendance_construct_sessions_data_for_add($session, $att);
-                        $att->add_sessions($sessions);
-                        if (count($sessions) == 1) {
-                            $message = get_string('sessiongenerated', 'attendance');
-                        } else {
-                            $message = get_string('sessionsgenerated', 'attendance', count($sessions));
+                        foreach ($sessions as $index => $sess) {
+                            // Check for duplicate sessions.
+                            if ($this->session_exists($sess)) {
+                                mod_attendance_notifyqueue::notify_message(get_string('sessionduplicate', 'attendance', (array(
+                                    'course' => $session->course,
+                                    'activity' => $cm->name
+                                ))));
+                                unset($sessions[$index]);
+                            } else {
+                                $okcount ++;
+                            }
                         }
-
-                        mod_attendance_notifyqueue::notify_success($message);
+                        if (! empty($sessions)) {
+                            $att->add_sessions($sessions);
+                        }
                     }
                     $activities->close();
                 } else {
@@ -361,6 +371,37 @@ class sessions
                 mod_attendance_notifyqueue::notify_problem(get_string('error:coursenotfound', 'attendance', $session->course));
             }
         }
+        $message = get_string('sessionsgenerated', 'attendance', $okcount);
+
+        if ($okcount < 1) {
+            mod_attendance_notifyqueue::notify_message($message);
+        } else {
+            mod_attendance_notifyqueue::notify_success($message);
+        }
+    }
+
+    /**
+     * Check if an identical session exists.
+     *
+     * @param stdClass $session
+     * @return boolean
+     */
+    private function session_exists(stdClass $session)
+    {
+        global $DB;
+
+        $check = clone $session;
+
+        // Remove the properties that aren't useful to check.
+        unset($check->description);
+        unset($check->descriptionitemid);
+        unset($check->timemodified);
+        $check = (array) $check;
+
+        if ($DB->record_exists('attendance_sessions', $check)) {
+            return true;
+        }
+        return false;
     }
 }
 
