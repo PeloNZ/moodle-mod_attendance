@@ -250,7 +250,8 @@ class sessions
             $session->sestime['endhour'] = $to[0];
             $session->sestime['endminute'] = $to[1];
 
-            $session->sdescription['text'] = $this->get_column_data($row, $mapping['description']);
+            // Wrap the plain text description in html tags.
+            $session->sdescription['text'] = '<p>' . $this->get_column_data($row, $mapping['description']) . '</p>';
             $session->sdescription['format'] = FORMAT_HTML;
             $session->sdescription['itemid'] = 0;
 
