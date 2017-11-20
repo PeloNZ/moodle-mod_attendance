@@ -227,6 +227,10 @@ class sessions
 
             $session = new stdClass();
             $session->course = $this->get_column_data($row, $mapping['course']);
+            if (empty($session->course)) {
+                \mod_attendance_notifyqueue::notify_problem(get_string('error:sessioncourseinvalid', 'attendance'));
+                continue;
+            }
 
             // Handle multiple group assignments per session. Expect semicolon separated group names.
             $groups = $this->get_column_data($row, $mapping['groups']);
@@ -239,14 +243,28 @@ class sessions
 
             // Expect standardised date format, eg YYYY-MM-DD.
             $sessiondate = strtotime($this->get_column_data($row, $mapping['sessiondate']));
+            if ($sessiondate === false) {
+                \mod_attendance_notifyqueue::notify_problem(get_string('error:sessiondateinvalid', 'attendance'));
+                continue;
+            }
             $session->sessiondate = $sessiondate;
 
             // Expect standardised time format, eg HH:MM.
-            $from = explode(':', $this->get_column_data($row, $mapping['from']));
+            $from = $this->get_column_data($row, $mapping['from']);
+            if (empty($from)) {
+                \mod_attendance_notifyqueue::notify_problem(get_string('error:sessionstartinvalid', 'attendance'));
+                continue;
+            }
+            $from = explode(':', $from);
             $session->sestime['starthour'] = $from[0];
             $session->sestime['startminute'] = $from[1];
 
-            $to = explode(':', $this->get_column_data($row, $mapping['to']));
+            $to = $this->get_column_data($row, $mapping['to']);
+            if (empty($to)) {
+                \mod_attendance_notifyqueue::notify_problem(get_string('error:sessionendinvalid', 'attendance'));
+                continue;
+            }
+            $to = explode(':', $to);
             $session->sestime['endhour'] = $to[0];
             $session->sestime['endminute'] = $to[1];
 
@@ -350,10 +368,11 @@ class sessions
                     ), 'id', 'id');
 
                     foreach ($activities as $activity) {
+                        // Build the session data
                         $cm = get_coursemodule_from_instance('attendance', $activity->id, $course->id);
                         $att = new mod_attendance_structure($activity, $cm, $course);
-
                         $sessions = attendance_construct_sessions_data_for_add($session, $att);
+
                         foreach ($sessions as $index => $sess) {
                             // Check for duplicate sessions.
                             if ($this->session_exists($sess)) {
@@ -378,8 +397,8 @@ class sessions
                 mod_attendance_notifyqueue::notify_problem(get_string('error:coursenotfound', 'attendance', $session->course));
             }
         }
-        $message = get_string('sessionsgenerated', 'attendance', $okcount);
 
+        $message = get_string('sessionsgenerated', 'attendance', $okcount);
         if ($okcount < 1) {
             mod_attendance_notifyqueue::notify_message($message);
         } else {
