@@ -378,6 +378,17 @@ class sessions
         } else {
             mod_attendance_notifyqueue::notify_success($message);
         }
+
+        // Trigger a sessions imported event.
+        $event = \mod_attendance\event\sessions_imported::create(array(
+            'objectid' => 0,
+            'context' => \context_system::instance(),
+            'other' => array(
+                'count' => $okcount
+            )
+        ));
+
+        $event->trigger();
     }
 
     /**
