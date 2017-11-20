@@ -195,6 +195,7 @@ $string['eventscreated'] = 'Calendar events created';
 $string['eventsdeleted'] = 'Calendar events deleted';
 $string['eventsessionadded'] = 'Session added';
 $string['eventsessiondeleted'] = 'Session deleted';
+$string['eventsessionsimported'] = 'Sessions imported';
 $string['eventsessionupdated'] = 'Session updated';
 $string['eventstatusadded'] = 'Status added';
 $string['eventstatusupdated'] = 'Status updated';
@@ -393,7 +394,6 @@ $string['sessionsids'] = 'IDs of sessions: ';
 $string['sessionsnotfound'] = 'There is no sessions in the selected timespan';
 $string['sessionstartdate'] = 'Session start date';
 $string['sessionstotal'] = 'Total number of sessions';
-$string['sessiontype'] = 'Type';
 $string['sessiontype_help'] = 'You can add sessions for all students or for a group of students. Ability to add different types depends on activity group mode.
 
 * In group mode "No groups" you can add only sessions for all students.
