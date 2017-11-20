@@ -382,6 +382,7 @@ $string['sessionalreadyexists'] = 'Session already exists for this date';
 $string['sessiondate'] = 'Date';
 $string['sessiondays'] = 'Session Days';
 $string['sessiondeleted'] = 'Session successfully deleted';
+$string['sessionduplicate'] = 'A duplicate session exists for course: {$a->course} in attendance: {$a->activity}';
 $string['sessionexist'] = 'Session not added (already exists)!';
 $string['sessiongenerated'] = 'One session was successfully generated';
 $string['sessionunknowngroup'] = 'A session specifies unknown group(s): {$a}';
