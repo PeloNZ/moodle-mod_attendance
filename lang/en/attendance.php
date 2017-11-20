@@ -209,6 +209,7 @@ $string['gradebookexplanation_help'] = 'The Attendance module displays your curr
 For example, if you have earned 8 of 10 points to date (80% attendance) and attendance for the entire course is worth 50 points, the Attendance module will display 8/10 and the gradebook will display 40/50. You have not yet earned 40 points but 40 is the equivalent point value to your current attendance percentage of 80%. The point value you have earned in the Attendance module can never decrease, as it is based only on attendance to date; however, the attendance point value shown in the gradebook may increase or decrease depending on your future attendance, as it is based on attendance for the entire course.';
 $string['gridcolumns'] = 'Grid columns';
 $string['group'] = 'Group';
+$string['groups'] = 'Groups';
 $string['groupsession'] = 'Group of students';
 $string['hiddensessions'] = 'Hidden sessions';
 $string['hiddensessions_help'] = 'Sessions are hidden if they are scheduled before the course start date.
@@ -383,6 +384,7 @@ $string['sessiondays'] = 'Session Days';
 $string['sessiondeleted'] = 'Session successfully deleted';
 $string['sessionexist'] = 'Session not added (already exists)!';
 $string['sessiongenerated'] = 'One session was successfully generated';
+$string['sessionunknowngroup'] = 'A session specifies unknown group(s): {$a}';
 $string['sessions'] = 'Sessions';
 $string['sessionscompleted'] = 'Taken sessions';
 $string['sessionsgenerated'] = '{$a} sessions were successfully generated';
