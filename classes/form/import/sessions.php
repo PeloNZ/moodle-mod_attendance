@@ -49,6 +49,7 @@ class sessions extends moodleform
         global $CFG;
 
         $mform = $this->_form;
+        $mform->addElement('html', get_string('csvformat', 'attendance'));
         $element = $mform->createElement('filepicker', 'importfile', get_string('importfile', 'mod_attendance'));
         $mform->addElement($element);
         $mform->addHelpButton('importfile', 'importfile', 'mod_attendance');

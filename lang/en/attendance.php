@@ -110,6 +110,12 @@ The sessions begin on the date of the base session and continue until the \'repe
 ';
 $string['createonesession'] = 'Create one session for the course';
 $string['csvdelimiter'] = 'CSV delimiter';
+$string['csvformat'] = 'The CSV data should be in this format:
+<pre>
+<br>
+course, groups, date, start time, end time, description, repeat on, repeat every, repeat until, studentscanmark, passwordgrp, randompassword, subnet
+ACF101, kiwi;pateke, 2017-11-30, 16:00, 18:00, desc test 1, , , , , , ,
+</pre>';
 $string['date'] = 'Date';
 $string['days'] = 'Days';
 $string['defaultdisplaymode'] = 'Default display mode';
@@ -224,7 +230,7 @@ $string['hiddensessionsdeleted'] = 'All hidden sessions were delete';
 $string['hidensessiondetails'] = 'Hide session details';
 $string['import'] = 'Import';
 $string['importfile'] = 'Import file';
-$string['importfile_help'] = 'Import file';
+$string['importfile_help'] = 'Choose a CSV file to upload';
 $string['importsessions'] = 'Import Sessions';
 $string['identifyby'] = 'Identify student by';
 $string['includeall'] = 'Select all sessions';
